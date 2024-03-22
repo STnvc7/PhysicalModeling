@@ -3,22 +3,22 @@ from scipy.io.wavfile import write
 from scipy.signal import butter, lfilter
 
 class KarplusStrong:
-	def __init__(self, Fs : int, buffer_size : int = 44010, feedback : float =0.5,
-				 midi_resolution : int = 24, bpm : int = 100, A_Hz : float = 440):
+	def __init__(self, process_context, buffer_size : int = 44010, feedback : float =0.5):
 		
-		self.Fs = Fs
+		self.Fs 				= process_context.Fs
+		self.midi_resolution 	= process_context.midi_resolution
+		self.bpm 				= process_context.bpm
+		self.concert_pitch		= process_context.concert_pitch
+
 		self.buffer_size = buffer_size
 		self.feedback = feedback
-		self.midi_resolution = midi_resolution
-		self.bpm = bpm
-		self.A_Hz = A_Hz
 
 		self.pluck_time = int(0.002 * Fs) #20ms
 
 		self.delay_line = DelayLine(buffer_size)
 
 	def number_to_frequency(self, midi_number : int):
-	    return (self.A_Hz / 32) * (2 ** ((midi_number - 9) / 12))
+	    return (self.concert_pitch / 32) * (2 ** ((midi_number - 9) / 12))
 
 	def ticks_to_time(self, ticks : int):
 		return (60 / (self.bpm * self.midi_resolution)) * ticks
