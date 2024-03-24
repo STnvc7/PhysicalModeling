@@ -11,5 +11,4 @@ wheels/
 
 *.pyc
 *.wav
-
 bin/*
